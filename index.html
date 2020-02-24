@@ -34,6 +34,9 @@
         const recognizer = await createModel();
         const classLabels = recognizer.wordLabels(); // get class labels
         const labelContainer = document.getElementById('label-container');
+        const class_label = 'Class 2'
+        const threshold = 0.8;
+
         for (let i = 0; i < classLabels.length; i++) {
             labelContainer.appendChild(document.createElement('div'));
         }
@@ -47,6 +50,9 @@
             for (let i = 0; i < classLabels.length; i++) {
                 const classPrediction = classLabels[i] + ': ' + result.scores[i].toFixed(2);
                 console.log(classPrediction);
+                if (classLabels[i] === class_label && result.scores[i] > threshold) {
+                    console.log("TOOGLE THING!!!")
+                }
                 labelContainer.childNodes[i].innerHTML = classPrediction;
             }
         }, {

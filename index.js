@@ -1,5 +1,15 @@
 
 const puppeteer = require('puppeteer')
+const ewelink = require('ewelink-api');
+
+//  id of the device to toogle
+const id = '10008562ea';
+// fil it with your info and read password from env variable
+const connection = new ewelink({
+    email: 'candres.alv@gmail.com',
+    password: process.env.PASSWORD,
+    region: 'us',
+});
 
 const keypress = async () => {
     process.stdin.setRawMode(true)
@@ -10,12 +20,25 @@ const keypress = async () => {
 }
 
 const main = async () => {
+
+    const region = await connection.getRegion();
+    console.log(region);
+
     const browser = await puppeteer.launch({
         args: ['--use-fake-ui-for-media-stream'], headless: true
     })
     const page = await browser.newPage()
-    await page.goto('file:///Users/carlosalvarez/data/charlie/audio/index.html')
-    page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+    await page.goto('file://' + __dirname + '/index.html')
+
+    page.on('console', async msg => {
+        console.log('PAGE LOG:', msg.text());
+        if (msg.text().includes("TOOGLE")) {
+            console.log("Eureka");
+            /* toggle device */
+            await connection.toggleDevice(id);
+        }
+    });
+
     await page.evaluate(() => console.log(`url is ${location.href}`));
 
 
@@ -27,4 +50,30 @@ const main = async () => {
 
 }
 
+
 main().then(process.exit)
+
+
+    // (async () => {
+
+    //     const connection = new ewelink({
+    //         email: 'candres.alv@gmail.com',
+    //         password: 'aB12345678',
+    //         region: 'us',
+    //     });
+
+    //     const id = '10008562ea';
+    //     // const region = await connection.getRegion();
+    //     // console.log(region);
+    //     /* get all devices */
+    //     // const devices = await connection.getDevices();
+    //     // console.log(devices);
+
+    //     // /* get specific devide info */
+    //     // const device = await connection.getDevice(id);
+    //     // console.log(device);
+
+    //     /* toggle device */
+    //     await connection.toggleDevice(id);
+
+    // })();
