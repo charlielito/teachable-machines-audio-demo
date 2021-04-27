@@ -12,12 +12,12 @@ const id = '10008562ea';
 
     /* create the connection using cache files */
     const connection = new ewelink({ devicesCache, arpTable });
-    console.log(connection);
+    // console.log(connection);
 
     /* turn device on */
     await connection.setDevicePowerState(id, 'on');
 
-    /* turn device off */
+    // /* turn device off */
     await connection.setDevicePowerState(id, 'off');
 
 })();

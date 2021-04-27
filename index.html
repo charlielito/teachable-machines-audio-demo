@@ -11,8 +11,12 @@
     // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
 
     // the link to your model provided by Teachable Machine export panel
-    const URL = 'https://teachablemachine.withgoogle.com/models/YpaLTbDG/';
+    // const URL = 'https://teachablemachine.withgoogle.com/models/YpaLTbDG/';
+    const URL = 'https://teachablemachine.withgoogle.com/models/dSAwyPXKf/';
     // const URL = 'file:///Users/carlosalvarez/data/charlie/audio/model/';
+
+    const MODEL_THRESH = 0.8;
+    const OVERLAP_FACTOR = 0.7;
 
     async function createModel() {
         const checkpointURL = URL + 'model.json'; // model topology
@@ -50,8 +54,8 @@
             for (let i = 0; i < classLabels.length; i++) {
                 const classPrediction = classLabels[i] + ': ' + result.scores[i].toFixed(2);
                 console.log(classPrediction);
-                if (classLabels[i] === class_label && result.scores[i] > threshold) {
-                    console.log("TOOGLE THING!!!")
+                if (classLabels[i] === class_label && result.scores[i] > MODEL_THRESH) {
+                    console.log("TOGGLE THING!!!")
                 }
                 labelContainer.childNodes[i].innerHTML = classPrediction;
             }
@@ -59,7 +63,7 @@
             includeSpectrogram: true, // in case listen should return result.spectrogram
             probabilityThreshold: 0.75,
             invokeCallbackOnNoiseAndUnknown: true,
-            overlapFactor: 0.70 // probably want between 0.5 and 0.75. More info in README
+            overlapFactor: OVERLAP_FACTOR // probably want between 0.5 and 0.75. More info in README
         });
 
         // Stop the recognition in 5 seconds.

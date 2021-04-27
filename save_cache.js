@@ -16,8 +16,7 @@ console.log("My local IP is: " + myIp);
     await connection.saveDevicesCache();
 
     await Zeroconf.saveArpTable({
-        // ip: myIp
-        ip: '192.168.0.47'
+        ip: myIp.toString()
     });
 
 })();
