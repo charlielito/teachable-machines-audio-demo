@@ -47,28 +47,36 @@ const main = async () => {
     await page.goto('file://' + __dirname + '/index.html')
 
     var detection_timestamp = Date.now();
+    var prediction_count = 0;
 
     page.on('console', async msg => {
         // console.log('PAGE LOG:', msg.text());
+        if (msg.text().includes("Prediction")) {
+            prediction_count++;
+        }
+        // Ignore first predictions that are noisy
+        if (prediction_count < 10) {
+            return;
+        }
+        
         if (msg.text().includes("TOGGLE")) {
-            
             // if >2 consecutive detections in less than 1 secs, ignore
             if (Date.now() - detection_timestamp < 1000) {
                 console.log("Ignoring repeated detection");
+                return;
             }
-            else{
-                console.log("Toggling device!");
-                detection_timestamp = Date.now();
 
-                if (lan_mode){
+            console.log("Toggling device!");
+            detection_timestamp = Date.now();
+
+            if (!lan_mode){
                 /* toggle device */
-                    await connection.toggleDevice(id);
-                }
-                else{ // in lan mode, the ewelink api doesn't support toggleDevice method
-                    const set_state = device_state ? 'on' : 'off'
-                    await connection.setDevicePowerState(id, set_state);
-                    device_state = !device_state;  
-                }
+                await connection.toggleDevice(id);
+            }
+            else{ // in lan mode, the ewelink api doesn't support toggleDevice method
+                const set_state = device_state ? 'on' : 'off'
+                await connection.setDevicePowerState(id, set_state);
+                device_state = !device_state;  
             }
         }
     });

@@ -53,7 +53,7 @@
             // render the probability scores per class
             for (let i = 0; i < classLabels.length; i++) {
                 const classPrediction = classLabels[i] + ': ' + result.scores[i].toFixed(2);
-                console.log(classPrediction);
+                console.log("Prediction: " + classPrediction);
                 if (classLabels[i] === class_label && result.scores[i] > MODEL_THRESH) {
                     console.log("TOGGLE THING!!!")
                 }
