@@ -2,14 +2,38 @@
 const puppeteer = require('puppeteer')
 const ewelink = require('ewelink-api');
 const Zeroconf = require('ewelink-api/src/classes/Zeroconf');
+const yargs = require('yargs');
 
-//  id of the device to toggle
-const id = '10008562ea';
+const argv = yargs
+    .option('email', {
+        alias: 'e',
+        description: 'Ewelink registered email',
+    })
+    .default("region", "us") //  ewelink account region
+    .boolean("lan")
+    .default("device_id", "10008562ea") //  id of the device to toggle
+    .default("toggle_class", "Class 2") //  name class to toggle
+    .default("threshold", 0.8) //  threshold score to toggle
+    .help()
+    .alias('help', 'h')
+    .argv;
+
+// console.log(argv);
+
+// id of the device to toggle
+const id = argv.device_id;
 
 // whether to use lan mode or through internet
-const lan_mode = true;
-// initial guess for device in lab mode
+const lan_mode = 'lan' in argv? argv.lan: false;
+
+// initial guess for device in lan mode
 var device_state = true;
+
+// name of the class detected that toggles the device
+const toggle_class = argv.toggle_class;
+
+// confidence threshold for prediction to toggle device
+const THRESHOLD = argv.threshold;
 
 const keypress = async () => {
     process.stdin.setRawMode(true)
@@ -30,14 +54,15 @@ const main = async () => {
         connection = new ewelink({ devicesCache, arpTable });
     }
     else{
+        if (!("email" in argv)) {
+            throw new Error("email must be provided when not running in LAN mode")
+        }
         // fil it with your info and read password from env variable
         connection = new ewelink({
-            email: 'candres.alv@gmail.com',
+            email: argv.email,
             password: process.env.PASSWORD,
-            region: 'us',
+            region: argv.region,
         });
-        const region = await connection.getRegion();
-        console.log(region);
     }
 
     const browser = await puppeteer.launch({
@@ -51,23 +76,42 @@ const main = async () => {
 
     page.on('console', async msg => {
         // console.log('PAGE LOG:', msg.text());
-        if (msg.text().includes("Prediction")) {
+        const msg_str = msg.text();
+        var predictions = []
+
+        // Try to parse the msg, if it fails, does not belong to predictions
+        try {
+            predictions = JSON.parse(msg_str)
             prediction_count++;
-        }
+          } catch(err) {
+            // console.error(err)
+            return;
+          }
+
         // Ignore first predictions that are noisy
-        if (prediction_count < 10) {
+        if (prediction_count < 5) {
+            // console.log("Skipping first predictions")
             return;
         }
+        // console.log(msg_str);
+
+        var toggle = false;
+        for (let prediction of predictions){
+            if (prediction.class === toggle_class && prediction.score > THRESHOLD){
+                toggle = true;
+            }
+        }
+        // return;
         
-        if (msg.text().includes("TOGGLE")) {
+        if (toggle) {
             // if >2 consecutive detections in less than 1 secs, ignore
             if (Date.now() - detection_timestamp < 1000) {
                 console.log("Ignoring repeated detection");
                 return;
             }
 
-            console.log("Toggling device!");
             detection_timestamp = Date.now();
+            console.log(new Date(detection_timestamp) + ": Toggling device!");
 
             if (!lan_mode){
                 /* toggle device */

@@ -12,10 +12,10 @@
 
     // the link to your model provided by Teachable Machine export panel
     // const URL = 'https://teachablemachine.withgoogle.com/models/YpaLTbDG/';
-    const URL = 'https://teachablemachine.withgoogle.com/models/dSAwyPXKf/';
+    // const URL = 'https://teachablemachine.withgoogle.com/models/dSAwyPXKf/';
     // const URL = 'file:///Users/carlosalvarez/data/charlie/audio/model/';
 
-    const MODEL_THRESH = 0.8;
+    const URL = 'https://teachablemachine.withgoogle.com/models/qXDHg3tv-/';
     const OVERLAP_FACTOR = 0.7;
 
     async function createModel() {
@@ -38,8 +38,6 @@
         const recognizer = await createModel();
         const classLabels = recognizer.wordLabels(); // get class labels
         const labelContainer = document.getElementById('label-container');
-        const class_label = 'Class 2'
-        const threshold = 0.8;
 
         for (let i = 0; i < classLabels.length; i++) {
             labelContainer.appendChild(document.createElement('div'));
@@ -50,15 +48,14 @@
         // 2. A configuration object with adjustable fields
         recognizer.listen(result => {
             const scores = result.scores; // probability of prediction for each class
+            var predictions = []
             // render the probability scores per class
             for (let i = 0; i < classLabels.length; i++) {
                 const classPrediction = classLabels[i] + ': ' + result.scores[i].toFixed(2);
-                console.log("Prediction: " + classPrediction);
-                if (classLabels[i] === class_label && result.scores[i] > MODEL_THRESH) {
-                    console.log("TOGGLE THING!!!")
-                }
                 labelContainer.childNodes[i].innerHTML = classPrediction;
+                predictions.push({ 'class': classLabels[i], 'score': scores[i] })
             }
+            console.log(JSON.stringify(predictions));
         }, {
             includeSpectrogram: true, // in case listen should return result.spectrogram
             probabilityThreshold: 0.75,

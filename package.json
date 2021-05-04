@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "ewelink-api": "^3.1.1",
-    "puppeteer": "^9.0.0"
+    "puppeteer": "^9.0.0",
+    "yargs": "^17.0.1"
   }
 }
