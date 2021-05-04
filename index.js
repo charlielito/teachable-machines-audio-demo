@@ -9,6 +9,10 @@ const argv = yargs
         alias: 'e',
         description: 'Ewelink registered email',
     })
+    .option('password', {
+        alias: 'p',
+        description: 'Ewelink account password',
+    })
     .default("region", "us") //  ewelink account region
     .boolean("lan")
     .default("device_id", "10008562ea") //  id of the device to toggle
@@ -35,6 +39,12 @@ const toggle_class = argv.toggle_class;
 // confidence threshold for prediction to toggle device
 const THRESHOLD = argv.threshold;
 
+// Password for account
+var password = argv.password;
+if (!("pass" in argv)) {
+    password = process.env.PASSWORD;
+}
+
 const keypress = async () => {
     process.stdin.setRawMode(true)
     return new Promise(resolve => process.stdin.once('data', () => {
@@ -55,12 +65,12 @@ const main = async () => {
     }
     else{
         if (!("email" in argv)) {
-            throw new Error("email must be provided when not running in LAN mode")
+            throw new Error("email must be provided when not running in LAN mode");
         }
         // fil it with your info and read password from env variable
         connection = new ewelink({
             email: argv.email,
-            password: process.env.PASSWORD,
+            password: password,
             region: argv.region,
         });
     }
