@@ -20,7 +20,7 @@ const myIp = Object.values(require('os').networkInterfaces()).reduce((r, list) =
 console.log("My local IP is: " + myIp);
 
 var password = argv.password;
-if (!("pass" in argv)) {
+if (!("password" in argv)) {
     password = process.env.PASSWORD;
 }
 

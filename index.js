@@ -41,9 +41,11 @@ const THRESHOLD = argv.threshold;
 
 // Password for account
 var password = argv.password;
-if (!("pass" in argv)) {
+if (!("password" in argv)) {
     password = process.env.PASSWORD;
 }
+
+
 
 const keypress = async () => {
     process.stdin.setRawMode(true)
