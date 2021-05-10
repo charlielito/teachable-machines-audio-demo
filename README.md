@@ -1,5 +1,7 @@
 # Using Audio to toggle a WiFi connected device with [Teachable Machines](https://teachablemachine.withgoogle.com/) by Google
 
+https://user-images.githubusercontent.com/8033598/117604569-5d26f680-b11b-11eb-958b-fc94078ec963.mp4
+
 An audio model for recognizing a whistle pattern was trained to toggle a [Sonoff/Ewelink socket](https://www.amazon.com/-/es/Slampher-Bombilla-inteligente-compatible-Assistant/dp/B07TRSYJGB) device connected to a room light. Basically, you whistle and the light turns on/off.
 
 This is also a starting point for those wo want to deploy an audio model in a headless device like a RaspberryPi, since at May 2021 there is no API in python for using an audio trained model. The current options are on the browser or on Android.
@@ -11,6 +13,7 @@ To be able to use an audio model, we use node.js with puppeteer that launches a 
 * Node
 * Ewelink connected device and account
 * Teachable machines audio trained model
+* A working microphone
 
 ## Installation
 
