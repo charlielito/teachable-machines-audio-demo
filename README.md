@@ -5,7 +5,7 @@ An audio model for recognizing a whistle pattern was trained to toggle a [Sonoff
 This is also a starting point for those wo want to deploy an audio model in a headless device like a RaspberryPi, since at May 2021 there is no API in python for using an audio trained model. The current options are on the browser or on Android.
 
 ## API trick/hack
-To be able to use an audio model, we use node.js with puppeteer with a headless chrome to be able to run the model. Chrome runs the model and outputs the predictions as logs where are parsed inside the node.js script. After that the user can do whatever with the predictions. In this case toggling a light.
+To be able to use an audio model, we use node.js with puppeteer that launches a headless chrome to be able to run the model. Chrome runs the model and outputs the predictions as logs which are parsed inside the node.js script. After that the user can do whatever with the predictions. In this case toggling a light.
 
 ## Requirements
 * Node
@@ -28,14 +28,14 @@ npm install .
 ```
 
 ## Running the demo
-First you need to identify the `ID` of the device you want to control. For that just get the list of all devices for you ewelink account with:
+First you need to identify the `ID` of the device you want to control. For that just get the list of all devices for you `ewelink` account with:
 
 ```
 node get_devices.js -e <my@email.com> -p <my-password>
 ```
 Look for the property `deviceid`.
 
-Now you are ready to run the demo. If you want to change from model, change https://github.com/charlielito/teachable-machines-audio-demo/blob/master/index.html#L18 with the URL of your trained model.
+Now you are ready to run the demo. If you want to change to another model, change https://github.com/charlielito/teachable-machines-audio-demo/blob/master/index.html#L18 with the URL of your trained model.
 
 Finally run:
 
@@ -58,3 +58,14 @@ Finally just run everything with:
 node index.js --lan --deviceid <my-device-id>
 ```
 
+## Training the model
+This should be very straight forward following the instructions at https://teachablemachine.withgoogle.com/train/audio.
+Once you have the model trained you should see something like the following:
+
+![Screenshot from 2021-05-09 22-13-20](https://user-images.githubusercontent.com/8033598/117601377-cf93d880-b113-11eb-9fbe-1565923d411f.png)
+
+## Hardware setup
+
+You can run this demo in you laptop, but if you want to control your lights you'll have to have the laptop 24/7 turned on. Because of that, I am running this Demo in a Jetson TX2 for continuos evaluation. I used a Jetson because I had one at hand, but this should work without problem in a RaspberryPi for example.
+
+I used an USB audio card to read the audio from an analog microphone, for example any headphones that have a microphone built-in (almost all). The set up can be seen in the following picture:
