@@ -15,7 +15,7 @@ const argv = yargs
     })
     .default("region", "us") //  ewelink account region
     .boolean("lan")
-    .default("device_id", "10008562ea") //  id of the device to toggle
+    .default("deviceid", "XXXX") //  id of the device to toggle
     .default("toggle_class", "Class 2") //  name class to toggle
     .default("threshold", 0.8) //  threshold score to toggle
     .help()
@@ -25,7 +25,7 @@ const argv = yargs
 // console.log(argv);
 
 // id of the device to toggle
-const id = argv.device_id;
+const id = argv.deviceid;
 
 // whether to use lan mode or through internet
 const lan_mode = 'lan' in argv? argv.lan: false;
