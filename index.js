@@ -15,6 +15,7 @@ const argv = yargs
     })
     .default("region", "us") //  ewelink account region
     .boolean("lan")
+    .boolean("debug")
     .default("deviceid", "XXXX") //  id of the device to toggle
     .default("toggle_class", "Class 2") //  name class to toggle
     .default("threshold", 0.8) //  threshold score to toggle
@@ -30,6 +31,9 @@ const id = argv.deviceid;
 // whether to use lan mode or through internet
 const lan_mode = 'lan' in argv? argv.lan: false;
 
+// whether to debug all messages from chromium
+const debug = 'debug' in argv? argv.lan: false;
+
 // initial guess for device in lan mode
 var device_state = true;
 
@@ -44,7 +48,6 @@ var password = argv.password;
 if (!("password" in argv)) {
     password = process.env.PASSWORD;
 }
-
 
 
 const keypress = async () => {
@@ -87,7 +90,8 @@ const main = async () => {
     var prediction_count = 0;
 
     page.on('console', async msg => {
-        // console.log('PAGE LOG:', msg.text());
+        if (debug)
+            console.log('PAGE LOG:', msg.text());
         const msg_str = msg.text();
         var predictions = []
 

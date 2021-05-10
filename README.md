@@ -43,6 +43,8 @@ Finally run:
 node index.js -e <my@email.com> -p <my-password> --deviceid <my-device-id>
 ```
 
+There are additional parameters like `--toggle_class` and `--threshold`. For more info run `node index.js -h`.
+
 ### Local or LAN mode
 By default the demo calls the API through Internet, which causes a little bit of lag when triggering the state of the device. If you want to control a device that is in your LAN, you can follow this extra step that will speed up the control of the devices.
 
@@ -69,3 +71,5 @@ Once you have the model trained you should see something like the following:
 You can run this demo in you laptop, but if you want to control your lights you'll have to have the laptop 24/7 turned on. Because of that, I am running this Demo in a Jetson TX2 for continuos evaluation. I used a Jetson because I had one at hand, but this should work without problem in a RaspberryPi for example.
 
 I used an USB audio card to read the audio from an analog microphone, for example any headphones that have a microphone built-in (almost all). The set up can be seen in the following picture:
+
+![WhatsApp Image 2021-05-09 at 10 35 22 PM](https://user-images.githubusercontent.com/8033598/117602721-00294180-b117-11eb-83e2-65acb941f0d4.jpeg)
